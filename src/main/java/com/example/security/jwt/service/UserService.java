@@ -3,6 +3,7 @@ package com.example.security.jwt.service;
 import com.example.security.jwt.dto.SignUpDto;
 import com.example.security.jwt.dto.UserDto;
 import com.example.security.jwt.entity.User;
+import com.example.security.jwt.exceptions.ResourceNotFoundException;
 import com.example.security.jwt.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -25,7 +26,7 @@ public class UserService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return userRepository.findByEmail(username).orElseThrow(() -> new BadCredentialsException("User with email: " + username + " not found"));
+        return userRepository.findByEmail(username).orElseThrow(() -> new ResourceNotFoundException("User with email: " + username + " not found"));
     }
 
     public UserDto signUp(SignUpDto signUpDto) {
@@ -34,8 +35,8 @@ public class UserService implements UserDetailsService {
             throw new BadCredentialsException("User with email: " + signUpDto.getEmail() + " already exists");
         }
         User userToBeCreated = modelMapper.map(signUpDto, User.class);
+        userToBeCreated.setPassword(passwordEncoder.encode(signUpDto.getPassword()));
         User savedUser = userRepository.save(userToBeCreated);
-        savedUser.setPassword(passwordEncoder.encode(signUpDto.getPassword()));
         return modelMapper.map(savedUser, UserDto.class);
     }
 }

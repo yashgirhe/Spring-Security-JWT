@@ -9,12 +9,12 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 public class AppConfig {
 
     @Bean
-    ModelMapper getModelMapper(){
+    ModelMapper getModelMapper() {
         return new ModelMapper();
     }
 
     @Bean
-    BCryptPasswordEncoder getPasswordEncoder(){
+    BCryptPasswordEncoder getPasswordEncoder() {
         return new BCryptPasswordEncoder();
     }
 }
