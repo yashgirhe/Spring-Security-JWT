@@ -30,6 +30,7 @@ public class WebSecurityConfig {
         httpSecurity
                 .authorizeHttpRequests(
                         auth -> auth.requestMatchers("/auth/**").permitAll()
+                                .requestMatchers(AUTH_WHITELIST).permitAll()
                                 .anyRequest().authenticated()
                 )
                 .csrf(csrfConfig -> csrfConfig.disable())
@@ -38,4 +39,10 @@ public class WebSecurityConfig {
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
         return httpSecurity.build();
     }
+
+    private static final String[] AUTH_WHITELIST = {
+            // -- Swagger UI v3 (OpenAPI)
+            "/v3/api-docs/**",
+            "/swagger-ui/**"
+    };
 }
