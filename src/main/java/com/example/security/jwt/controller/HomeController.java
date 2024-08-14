@@ -6,11 +6,9 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/home")
 @Tag(name = "Home Controller")
 public class HomeController {
 
@@ -20,8 +18,14 @@ public class HomeController {
                     content = {@Content(mediaType = "text/html")}),
             @ApiResponse(responseCode = "403", description = "Forbidden - User is not authorized or JWT token is missing",
                     content = {@Content(mediaType = "application/json")})})
-    @GetMapping
-    public String getMethod() {
-        return "You are authenticated";
+    @GetMapping("/home")
+    public String home() {
+        return "You are authorized USER/ADMIN";
     }
+
+    @GetMapping("/user")
+    public String userOnly() {
+        return "You are authorized USER";
+    }
+
 }
