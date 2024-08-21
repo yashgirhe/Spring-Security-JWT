@@ -6,6 +6,7 @@ import com.example.security.jwt.repository.SessionRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.web.authentication.session.SessionAuthenticationException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.Comparator;
@@ -38,5 +39,10 @@ public class SessionService {
                 .orElseThrow(() -> new SessionAuthenticationException("Session not found for refreshToken: "+refreshToken));
         session.setLastUsedAt(LocalDateTime.now());
         sessionRepository.save(session);
+    }
+
+    @Transactional
+    public void deleteSession(String refreshToken){
+        sessionRepository.deleteByRefreshToken(refreshToken);
     }
 }

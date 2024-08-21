@@ -71,8 +71,9 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<LoginResponseDto> login(@Valid @RequestBody LoginDto loginDto, HttpServletResponse response) {
         LoginResponseDto loginResponseDto = authService.login(loginDto);
-        Cookie cookie = new Cookie("refreshToken", loginResponseDto.getAccessToken());
+        Cookie cookie = new Cookie("refreshToken", loginResponseDto.getRefreshToken());
         cookie.setHttpOnly(true);
+        cookie.setPath("/");
         response.addCookie(cookie);
         return ResponseEntity.ok(loginResponseDto);
     }
@@ -80,9 +81,10 @@ public class AuthController {
     @PostMapping("/refresh")
     public ResponseEntity<LoginResponseDto> refresh(HttpServletRequest request){
         Cookie[] cookies = request.getCookies();
+        //cookies retains previously used RT, so we reduce stream to fetch the last RT
         String refreshToken = Arrays.stream(cookies)
                 .filter(cookie -> "refreshToken".equals(cookie.getName()))
-                .findFirst()
+                .reduce((first, second) -> second)
                 .map(cookie -> cookie.getValue())
                 .orElseThrow(() -> new AuthenticationServiceException("Refresh token not found inside the Cookies"));
         LoginResponseDto loginResponseDto = authService.refreshToken(refreshToken);

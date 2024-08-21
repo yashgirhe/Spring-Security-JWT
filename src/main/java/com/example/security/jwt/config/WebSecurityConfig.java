@@ -1,5 +1,7 @@
 package com.example.security.jwt.config;
 
+import com.example.security.jwt.advise.CustomAccessDeniedHandler;
+import com.example.security.jwt.advise.CustomAuthenticationEntryPoint;
 import com.example.security.jwt.filters.JwtAuthFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -13,6 +15,8 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import static com.example.security.jwt.enums.Role.*;
+
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
@@ -20,6 +24,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class WebSecurityConfig {
 
     private final JwtAuthFilter jwtAuthFilter;
+    private final CustomAccessDeniedHandler accessDeniedHandler;
+    private final CustomAuthenticationEntryPoint authenticationEntryPoint;
 
     private static final String[] AUTH_WHITELIST = {
             // -- Swagger UI v3 (OpenAPI)
@@ -40,7 +46,13 @@ public class WebSecurityConfig {
                 .authorizeHttpRequests(
                         auth -> auth.requestMatchers(PUBLIC_ROUTES).permitAll()
                                 .requestMatchers(AUTH_WHITELIST).permitAll()
+                                .requestMatchers("/logout/").hasAnyRole(ADMIN.name(), USER.name(), CREATOR.name())
                                 .anyRequest().authenticated()
+                )
+                .exceptionHandling(exceptionHandling ->
+                        exceptionHandling
+                                .accessDeniedHandler(accessDeniedHandler)
+                                .authenticationEntryPoint(authenticationEntryPoint)
                 )
                 .csrf(csrfConfig -> csrfConfig.disable())
                 .sessionManagement(sessionConfig -> sessionConfig.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
