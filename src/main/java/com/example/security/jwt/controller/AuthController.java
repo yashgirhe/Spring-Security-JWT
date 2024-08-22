@@ -32,14 +32,14 @@ import java.util.Arrays;
 @RequestMapping("/auth")
 @RequiredArgsConstructor
 @Validated
-@Tag(name = "Authentication APIs", description = "Signup and Login APIs")
+@Tag(name = "Authentication APIs")
 public class AuthController {
 
     private final UserService userService;
     private final AuthService authService;
 
     @Operation(
-            summary = "Sign Up"
+            summary = "Sign up as new user"
     )
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "User registered successfully",
@@ -78,8 +78,9 @@ public class AuthController {
         return ResponseEntity.ok(loginResponseDto);
     }
 
+    @Operation(summary = "Refresh access token")
     @PostMapping("/refresh")
-    public ResponseEntity<LoginResponseDto> refresh(HttpServletRequest request){
+    public ResponseEntity<LoginResponseDto> refresh(HttpServletRequest request) {
         Cookie[] cookies = request.getCookies();
         //cookies retains previously used RT, so we reduce stream to fetch the last RT
         String refreshToken = Arrays.stream(cookies)

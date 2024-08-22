@@ -1,6 +1,7 @@
 package com.example.security.jwt.controller;
 
 import com.example.security.jwt.service.AuthService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping(path = "/logout/")
 @RequiredArgsConstructor
 @Slf4j
+@Tag(name = "Logout")
 public class LogoutController {
 
     private final AuthService authService;

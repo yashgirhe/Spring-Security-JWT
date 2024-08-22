@@ -12,20 +12,14 @@ import org.springframework.web.bind.annotation.RestController;
 @Tag(name = "Home Controller")
 public class HomeController {
 
-    @Operation(summary = "Only authenticated user can access")
+    @Operation(summary = "Any user can access this API",
+            description = "No login is required")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Successfully retrieved data",
-                    content = {@Content(mediaType = "text/html")}),
-            @ApiResponse(responseCode = "403", description = "Forbidden - User is not authorized or JWT token is missing",
-                    content = {@Content(mediaType = "application/json")})})
+                    content = {@Content(mediaType = "text/html")})})
     @GetMapping("/home")
     public String home() {
-        return "You are authorized USER/ADMIN";
-    }
-
-    @GetMapping("/user")
-    public String userOnly() {
-        return "You are authorized USER";
+        return "Welcome to home page";
     }
 
 }
