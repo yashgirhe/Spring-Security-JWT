@@ -1,4 +1,4 @@
-![Screenshot 2024-08-22 152043](https://github.com/user-attachments/assets/61853b30-5b49-40f8-b50c-5647eed78607)1.Implementation flow
+1.Implementation flow
 ![JWT implementation flow](https://github.com/user-attachments/assets/de865f8b-2c01-462a-bc81-72b4bc7c55cc)
 
 2.Flow when user make an API call using token
